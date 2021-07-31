@@ -1,7 +1,3 @@
-export const process = {
-  prod: true,
-}
-
 export const site = {
   home: process.env.NODE_ENV === 'production' ? '/vue3-cli-notes/public/' : '/'
 }
