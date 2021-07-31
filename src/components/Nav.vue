@@ -7,11 +7,11 @@
 </template>
 
 <script>
-  import {links} from '@/_config'
+  import {navLinks} from '@/_config'
   export default {
     data() {
       return {
-        links: links
+        links: navLinks
       }
     }
   }
@@ -35,5 +35,4 @@
                 font-weight: 400
                 
               &:hover
-                color: var(--c-accent)
-</style>
+                color: var(--c-accent)</style>

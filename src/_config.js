@@ -1,8 +1,4 @@
-export const site = {
-  home: process.env.NODE_ENV === 'production' ? '/vue3-cli-notes/public/' : '/'
-}
-
-export const links= [
+export const navLinks= [
   {
     title: 'home',
     alias: 'home',
