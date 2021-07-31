@@ -1,7 +1,7 @@
 # vue3-cli-project
 
 
-GITHUB PAGE - [https://mariiabel.github.io/vue3-cli-project/public/](https://mariiabel.github.io/vue3-cli-project/public/)
+GITHUB PAGE - [https://mariiabel.github.io/vue3-cli-notes/public/](https://mariiabel.github.io/vue3-cli-notes/public/)
 
 
 ## Project setup
