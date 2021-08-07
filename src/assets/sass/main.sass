@@ -4,6 +4,7 @@
 :root 
     --c-text: #222244
     --c-accent: #aaaaff
+    --c-error: #b46464
 body
     font-family: 'Open Sans', sans-serif
     font-weight: 400
@@ -18,3 +19,45 @@ body
     margin-right: auto
     box-sizing: border-box
 
+.btn
+    border: 3px solid var(--c-accent)
+    border-image: linear-gradient(#fefeff, var(--c-accent)) 10
+    padding: 12px 30px
+    text-transform: uppercase
+    background: white
+    color: var(--c-accent)
+    border-radius: 5px
+    box-shadow: rgb(170 170 255 / 30%) 0 3px 3px
+    cursor: pointer
+    &:active
+        background-color: var(--c-accent)
+        color: white
+
+.form
+    position: relative
+    display: grid
+    grid-template-columns: 1fr
+    row-gap: 20px
+    justify-content: flex-start
+    &__area 
+        width: 100%
+        border: none
+        border-radius: 5px
+        box-shadow: rgb(122 122 122 / 30%) 0 1px 3px
+        padding: 15px
+        box-sizing: border-box
+        font-family: 'Open Sans', sans-serif
+        &:focus
+            border: none
+            outline: none
+    &__tags 
+        margin: 0
+    &__btn 
+        width: fit-content
+    &__error
+        color: var(--c-error)
+        position: absolute
+        top: 0
+        left: 0
+        font-size: 12px
+        transform: translateY(-120%)

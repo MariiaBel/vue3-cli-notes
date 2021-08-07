@@ -1,14 +1,17 @@
 <template lang="pug">
 
-span.note__error {{ form.error }}
 form.form(@submit.prevent="onSubmit")
-    textarea.form__area(required v-model="form.value" placeholder="Your note")
-    button.form__btn(type="submit") Add new note
+    span.form__error {{ error }}
+    textarea.form__area(required v-model.trim="form.value" placeholder="Your note")
+    Tags(:items="noteTags" itemsGroup="formTags" @onItemChecked="handleTagChecked" class="form__tags")
+    button.btn.form__btn(type="submit") Add new note
 
 </template>
 
 <script>
 import { isValidValue } from  '@/assets/js/validation.js'
+import Tags from '@/components/UI/Tags.vue'
+import { noteTags } from '@/_config.js'
 export default {
     props: {
         notes: {
@@ -19,31 +22,41 @@ export default {
             }
         }
     },
-    emits: ['onSubmit'],
+    components: {
+        Tags
+    },
     data() {
         return {
             form: {
                 value: '',
-                error: ''
+                tag: ''
             },
-            isValid: isValidValue
+            error: '',
+            noteTags:noteTags,
+            isValid: isValidValue,
+
         }
     },
     methods: {
         onSubmit() {
+            this.form.value = this.form.value.trim()
             if(this.isValid(this.form.value, this.notes)) {
                 this.hideError()
-                this.$emit('onSubmit', this.form.value.trim())
+                this.$emit('onSubmit', this.form)
                 this.form.value = ''
+                this.form.tag = ''
             } else {
                 this.showError(this.form.value)
             }
         },
+        handleTagChecked(tag) {
+            this.form.tag = tag
+        },
         showError(value) {
-            this.form.error = `The value "${value}" is not correct!`
+            this.error = `The value "${value}" is not correct!`
         },
         hideError() {
-            this.form.error = ''
+            this.error = ''
         }
     },
 }
@@ -51,32 +64,4 @@ export default {
 
 
 <style lang="sass">
-    .form
-        margin-top: 50px
-        margin-bottom: 30px
-        &__area 
-            width: 100%
-            border: none
-            border-radius: 5px
-            box-shadow: rgb(122 122 122 / 30%) 0 1px 3px
-            padding: 15px
-            box-sizing: border-box
-            font-family: 'Open Sans', sans-serif
-            &:focus
-                border: none
-                outline: none
-        &__btn
-            border: 3px solid var(--c-accent)
-            border-image: linear-gradient(#fefeff, var(--c-accent)) 10
-            padding: 12px 30px
-            text-transform: uppercase
-            background: white
-            color: var(--c-accent)
-            border-radius: 5px
-            margin-top: 15px
-            box-shadow: rgb(170 170 255 / 30%) 0 3px 3px
-            cursor: pointer
-            &:active
-                background-color: var(--c-accent)
-                color: white
 </style>

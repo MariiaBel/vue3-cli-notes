@@ -8,3 +8,6 @@ export const navLinks= [
     alias: 'about',
   }
 ]
+
+
+export const noteTags =  ["home", "travel", "work"]

@@ -1,9 +1,10 @@
 <template>
-    <div>
-        <NotesForm
+    <div class="notes">
+        <Form
             :notes="notes"
-            @onSubmit="handleSubmit"/>
-        <NotesList
+            @onSubmit="handleSubmit" class="notes__form"/>
+        <Tags :items="noteTags" itemsGroup="notesTags" class="notes__tags" />
+        <List
             :notes="notes"
             @changeNoteByIndex="handleChangeByIndex"
             @removeNoteByIndex="handleRemoveByIndex" />
@@ -11,30 +12,43 @@
 </template>
 
 <script>
-import NotesForm from '../components/Notes/Form.vue';
-import NotesList from '../components/Notes/List.vue'
+import Form from '@/components/Notes/Form.vue';
+import List from '@/components/Notes/List.vue'
+import Tags from '@/components/UI/Tags.vue'
+import { noteTags } from '@/_config.js'
 export default {
     mounted() {
         this.getNotes();
     },
     components: {
-        NotesForm,
-        NotesList
+        Form,
+        List,
+        Tags
     },
     data() {
         return {
-            notes: []
+            notes: [],
+            noteTags: [ 'all', ...noteTags],
         }
     },
     methods: {
         handleSubmit(note) {
-            this.notes.push(note);
+            this.notes.push(
+                {
+                    "value": note.value, 
+                    "tag": note.tag
+                }
+            );
         },
-        handleChangeByIndex({index, value}) {
-            this.notes[index] = value.trim()
+        handleChangeByIndex({index, note}) {
+            this.notes[index].value = note.value
+            this.notes[index].tag = note.tag
         },
         handleRemoveByIndex(index) {
             this.notes.splice(index, 1)
+        },
+        handleTagChecked() {
+
         },
         getNotes() {
             const localNotes = localStorage.getItem('notes')
@@ -52,3 +66,12 @@ export default {
     }
 }
 </script>
+
+<style lang="sass">
+    .notes
+        &__form
+            margin-top: 50px
+            margin-bottom: 70px
+        &__tags
+            justify-content: flex-end
+            font-size: 12px</style>
