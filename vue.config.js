@@ -1,9 +1,9 @@
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production'
-        ? '/vue3-cli-notes/public/'
+        ? '/vue3-cli-notes/production/'
         : '/',
     outputDir: process.env.NODE_ENV === 'production'
-        ? 'public'
+        ? 'production'
         : 'dev',
     productionSourceMap: false,
     assetsDir: 'assets',

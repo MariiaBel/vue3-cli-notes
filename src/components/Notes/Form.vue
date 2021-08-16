@@ -3,7 +3,7 @@
 form.form(@submit.prevent="onSubmit")
     span.form__error {{ error }}
     textarea.form__area(required v-model.trim="form.value" placeholder="Your note")
-    Tags(:items="noteTags" itemsGroup="formTags" @onItemChecked="handleTagChecked" class="form__tags")
+    Tags(:items="noteTags" :itemChecked="form.tag" itemsGroup="formTags" @onItemChecked="handleTagChecked" class="form__tags")
     button.btn.form__btn(type="submit") Add new note
 
 </template>
@@ -29,7 +29,7 @@ export default {
         return {
             form: {
                 value: '',
-                tag: ''
+                tag: noteTags[0]
             },
             error: '',
             noteTags:noteTags,
@@ -44,7 +44,7 @@ export default {
                 this.hideError()
                 this.$emit('onSubmit', this.form)
                 this.form.value = ''
-                this.form.tag = ''
+                this.form.tag = this.noteTags[0]
             } else {
                 this.showError(this.form.value)
             }

@@ -3,9 +3,9 @@
         <Form
             :notes="notes"
             @onSubmit="handleSubmit" class="notes__form"/>
-        <Tags :items="noteTags" itemsGroup="notesTags" class="notes__tags" />
+        <Tags :items="noteTags" itemsGroup="notesTags" class="notes__tags" @onItemChecked="handleTagChecked" />
         <List
-            :notes="notes"
+            :notes="filtedNotes"
             @changeNoteByIndex="handleChangeByIndex"
             @removeNoteByIndex="handleRemoveByIndex" />
     </div>
@@ -29,13 +29,21 @@ export default {
         return {
             notes: [],
             noteTags: [ 'all', ...noteTags],
+            filtedTag: 'all'
+        }
+    },
+    computed: {
+        filtedNotes: function () {
+            if(this.filtedTag === 'all') return this.notes
+
+            return this.notes.filter(item => item.tag == this.filtedTag)
         }
     },
     methods: {
         handleSubmit(note) {
             this.notes.push(
                 {
-                    "value": note.value, 
+                    "value": note.value,
                     "tag": note.tag
                 }
             );
@@ -47,8 +55,8 @@ export default {
         handleRemoveByIndex(index) {
             this.notes.splice(index, 1)
         },
-        handleTagChecked() {
-
+        handleTagChecked(tag) {
+            this.filtedTag = tag
         },
         getNotes() {
             const localNotes = localStorage.getItem('notes')
