@@ -3,7 +3,7 @@
 form.form(@submit.prevent="onSubmit")
     span.form__error {{ error }}
     textarea.form__area(required v-model.trim="form.value" placeholder="Your note")
-    Tags(:items="noteTags" :itemChecked="form.tag" itemsGroup="formTags" @onItemChecked="handleTagChecked" class="form__tags")
+    Tags(:items="noteTags" :itemCheckeв="form.tag" itemsGroup="formTags" @onItemChecked="handleTagChecked" class="form__tags")
     button.btn.form__btn(type="submit") Add new note
 
 </template>

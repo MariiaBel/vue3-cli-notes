@@ -5,7 +5,6 @@
             @onSubmit="handleSubmit" class="notes__form"/>
         <Tags :items="noteTags" itemsGroup="notesTags" class="notes__tags" @onItemChecked="handleTagChecked" />
         <List
-            :notes="filtedNotes"
             @changeNoteByIndex="handleChangeByIndex"
             @removeNoteByIndex="handleRemoveByIndex" />
     </div>
@@ -29,15 +28,9 @@ export default {
         return {
             notes: [],
             noteTags: [ 'all', ...noteTags],
-            filtedTag: 'all'
         }
     },
     computed: {
-        filtedNotes: function () {
-            if(this.filtedTag === 'all') return this.notes
-
-            return this.notes.filter(item => item.tag == this.filtedTag)
-        }
     },
     methods: {
         handleSubmit(note) {
