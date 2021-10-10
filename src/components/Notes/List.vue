@@ -1,21 +1,20 @@
 <template lang="pug">
 
 ol.note__list
-    li.note__item(v-for="(note, index) in getNotes" :key="index")
-        form.form.note__form(v-if="changing == index" @submit.prevent="onSubmit")
-            span.form__error {{ error }}
-            textarea.form__area(type="text" :value="note.value")
-            Tags.form__tags(:items="noteTags"  :itemChecked="note.tag" itemsGroup="listName"  @onItemChecked="handleTagChecked")
-            button.form__btn.btn Save
-        .note__item-text(v-else)
-            p.note__item-value(@click="changeNote(index)" ) {{ note.value }}
-            span.note__item-tag {{ note.tag }}
-            span.note__item-close.material-icons(tabindex="1"  @click="removeNote(index)") close
+  li.note__item(v-for="(note, index) in getNotes" :key="index")
+      form.form.note__form(v-if="choosenNote.id == index" @submit.prevent="onSubmit")
+          span.form__error {{ error }}
+          textarea.form__area(type="text" v-model.trim="note.value" required)
+          Tags.form__tags(:items="noteTags"  :itemChecked="note.tag" itemsGroup="listName"  @onItemChecked="handleTagChecked")
+          button.form__btn.btn Save
+      .note__item-text(v-else)
+          p.note__item-value(@click="changeNote(index)" ) {{ note.value }}
+          span.note__item-tag {{ note.tag }}
+          span.note__item-close.material-icons(tabindex="1"  @click="removeNote(index)") close
 
 </template>
 
 <script>
-import { isValidValue } from "@/assets/js/validation.js";
 import Tags from "@/components/UI/Tags.vue";
 import { noteTags } from "@/_config.js";
 export default {
@@ -24,19 +23,16 @@ export default {
   },
   data() {
     return {
-      changing: -1,
-      choosenNote: {},
+      choosenNote: {
+        id: -1
+      },
       error: "",
-      isValid: isValidValue,
       noteTags: noteTags,
     };
   },
   computed: {
     getNotes() {
         return this.$store.getters.getNotesByTag
-    },
-    getNote() {
-        return this.$store.getters.getNotesById(this.changing)
     },
   },
   methods: {
@@ -45,25 +41,28 @@ export default {
         value: event.target[0].value,
         tag: this.choosenNote.tag,
       };
-      const index = this.changing;
-      if (
-        this.choosenNote.value == note.value ||
-        this.isValid(note.value, this.getNotes())
-      ) {
-        this.resetNote();
-        this.$emit("changeNoteByIndex", { index, note });
-      } else {
-        this.showError(note.value);
-      }
+      this.$store.dispatch('setNoteById', {id: this.choosenNote.id, note: note})
+        .then(() => {
+            console.log('success')
+            this.resetNote();
+        })
+        .catch(()=> {
+            console.log('fail')
+            this.showError(note.value)
+        })
+    },
+    getNote() {
+        return this.$store.getters.getNotesById(this.choosenNote.id)
     },
     removeNote(index) {
-      this.$emit("removeNoteByIndex", index);
+      this.$store.dispatch('deleteNoteById', index)
     },
     changeNote(index) {
       this.hideError();
-      this.choosenNote.value = this.getNote().value;
-      this.choosenNote.tag = this.getNote().tag;
-      this.changing = index;
+      this.choosenNote.id = index;
+      let note = this.getNote()
+      this.choosenNote.value = note.value;
+      this.choosenNote.tag = note.tag;
     },
     handleTagChecked(tag) {
       this.choosenNote.tag = tag;
@@ -75,8 +74,9 @@ export default {
       this.error = "";
     },
     resetNote() {
-      this.choosenNote = {};
-      this.changing = -1;
+      this.choosenNote = {
+        id: -1
+      };
     },
   },
 };
@@ -84,36 +84,39 @@ export default {
 
 <style lang="sass">
 .note
-    &__list
-        list-style: none
-        padding: 0
-        margin-top: 30px
-        &__item
-            margin-top: 10px
-            box-shadow: 0px 10px 30px rgb(170 170 255 / 20%)
-            padding: 1px 20px
-            border-radius: 10px
-            &-text
-                display: flex
-                flex-direction: row
-                justify-content: space-between
-                align-items: center
-            &-tag
-                font-size: 10px
-                padding: 0.5em 1em
-                margin-right: 10px
-                border-radius: 5px
-                border: 1px solid var(--c-text)
-                background-color: var(--c-text)
-                color: white
-                text-transform: uppercase
-            &-value
-                flex-grow: 1
-                cursor: pointer
-            &-close
-                cursor: pointer
-        &__form
-            display: grid
-            grid-template-columns: 1fr
-            column-gap: 20px
-            align-items: flex-end</style>
+  &__list
+      list-style: none
+      padding: 0
+      margin-top: 30px
+  &__item
+      margin-top: 10px
+      box-shadow: 0px 10px 30px rgb(170 170 255 / 20%)
+      padding: 1px 20px
+      border-radius: 10px
+      &-text
+          display: flex
+          flex-direction: row
+          justify-content: space-between
+          align-items: center
+      &-tag
+          font-size: 10px
+          padding: 0.5em 1em
+          margin-right: 10px
+          border-radius: 5px
+          border: 1px solid var(--c-text)
+          background-color: var(--c-text)
+          color: white
+          text-transform: uppercase
+      &-value
+          flex-grow: 1
+          cursor: pointer
+      &-close
+          cursor: pointer
+  &__form
+      display: grid
+      grid-template-columns: 1fr
+      column-gap: 20px
+      align-items: flex-end
+          
+            
+            </style>

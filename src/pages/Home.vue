@@ -1,70 +1,38 @@
-<template>
-    <div class="notes">
-        <Form
-            :notes="notes"
-            @onSubmit="handleSubmit" class="notes__form"/>
-        <Tags :items="noteTags" itemsGroup="notesTags" class="notes__tags" @onItemChecked="handleTagChecked" />
-        <List
-            @changeNoteByIndex="handleChangeByIndex"
-            @removeNoteByIndex="handleRemoveByIndex" />
-    </div>
+<template lang="pug">
+
+.notes
+    Storage
+    Form.notes__form
+    Tags.notes__tags(:items="noteTags" itemsGroup="notesTags"  @onItemChecked="handleTagChecked")
+    List
+
 </template>
 
 <script>
 import Form from '@/components/Notes/Form.vue';
 import List from '@/components/Notes/List.vue'
 import Tags from '@/components/UI/Tags.vue'
+import Storage from '@/utiles/Storage.vue'
 import { noteTags } from '@/_config.js'
+
+// import { reactive } from '@vue/reactivity';
 export default {
-    mounted() {
-        this.getNotes();
-    },
     components: {
         Form,
         List,
-        Tags
+        Tags,
+        Storage
     },
     data() {
         return {
-            notes: [],
             noteTags: [ 'all', ...noteTags],
         }
     },
-    computed: {
-    },
     methods: {
-        handleSubmit(note) {
-            this.notes.push(
-                {
-                    "value": note.value,
-                    "tag": note.tag
-                }
-            );
-        },
-        handleChangeByIndex({index, note}) {
-            this.notes[index].value = note.value
-            this.notes[index].tag = note.tag
-        },
-        handleRemoveByIndex(index) {
-            this.notes.splice(index, 1)
-        },
         handleTagChecked(tag) {
-            this.filtedTag = tag
-        },
-        getNotes() {
-            const localNotes = localStorage.getItem('notes')
-            if(localNotes)
-                this.notes = JSON.parse(localNotes);
-        },
-    },
-    watch: {
-        notes: {
-            handler(updatedList) {
-                localStorage.setItem("notes", JSON.stringify(updatedList));
-            },
-            deep: true
+            this.$store.dispatch('setTag', tag)
         }
-    }
+    },
 }
 </script>
 
